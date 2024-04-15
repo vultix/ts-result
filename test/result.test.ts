@@ -110,20 +110,39 @@ test('Result.all', () => {
     expect(all0).toMatchResult(Ok([]));
     eq<typeof all0, Result<[], never>>(true);
 
+    const all0_array = Result.all([]);
+    expect(all0_array).toMatchResult(Ok([]));
+    eq<typeof all0_array, Result<[], never>>(true);
+
     const all1 = Result.all(ok0, ok1);
     expect(all1).toMatchResult(Ok([3, true]));
     eq<typeof all1, Result<[number, boolean], never>>(true);
 
-    const all3 = Result.all(err0, err1);
-    expect(all3).toMatchResult(Err(err0.val));
-    eq<typeof all3, Result<[never, never], symbol | Error>>(true);
+    const all1Array = Result.all([ok0, ok1]);
+    expect(all1Array).toMatchResult(Ok([3, true]));
+    eq<typeof all1Array, Result<[number, boolean], never>>(true);
 
-    const all4 = Result.all(...([] as Result<string, number>[]));
-    eq<typeof all4, Result<string[], number>>(true);
+    const all2 = Result.all(err0, err1);
+    expect(all2).toMatchResult(Err(err0.val));
+    eq<typeof all2, Result<[never, never], symbol | Error>>(true);
 
-    const all5 = Result.all(ok0, ok1, ok2, err2);
-    expect(all5).toMatchResult(Err(9));
-    eq<typeof all5, Result<[number, boolean, 8, boolean], boolean | 9>>(true);
+    const all2Array = Result.all([err0, err1]);
+    expect(all2Array).toMatchResult(Err(err0.val));
+    eq<typeof all2Array, Result<[never, never], symbol | Error>>(true);
+
+    const all3 = Result.all(...([] as Result<string, number>[]));
+    eq<typeof all3, Result<string[], number>>(true);
+
+    const all3Array = Result.all([] as Result<string, number>[]);
+    eq<typeof all3Array, Result<string[], number>>(true);
+
+    const all4 = Result.all(ok0, ok1, ok2, err2);
+    expect(all4).toMatchResult(Err(9));
+    eq<typeof all4, Result<[number, boolean, 8, boolean], boolean | 9>>(true);
+
+    const all4Array = Result.all([ok0, ok1, ok2, err2]);
+    expect(all4Array).toMatchResult(Err(9));
+    eq<typeof all4Array, Result<[number, boolean, 8, boolean], boolean | 9>>(true);
 });
 
 test('Result.any', () => {
@@ -138,20 +157,39 @@ test('Result.any', () => {
     expect(any0).toMatchResult(Err([]));
     eq<typeof any0, Result<never, []>>(true);
 
+    const any0Array = Result.any();
+    expect(any0Array).toMatchResult(Err([]));
+    eq<typeof any0Array, Result<never, []>>(true);
+
     const any1 = Result.any(ok0, ok1);
     expect(any1).toMatchResult(Ok(3));
     eq<typeof any1, Result<number | boolean, [never, never]>>(true);
 
-    const any3 = Result.any(err0, err1);
-    expect(any3).toMatchResult(Err([err0.val, err1.val]));
-    eq<typeof any3, Result<never, [symbol, Error]>>(true);
+    const any1Array = Result.any([ok0, ok1]);
+    expect(any1Array).toMatchResult(Ok(3));
+    eq<typeof any1Array, Result<number | boolean, [never, never]>>(true);
 
-    const any4 = Result.any(...([] as Result<string, number>[]));
-    eq<typeof any4, Result<string, number[]>>(true);
+    const any2 = Result.any(err0, err1);
+    expect(any2).toMatchResult(Err([err0.val, err1.val]));
+    eq<typeof any2, Result<never, [symbol, Error]>>(true);
 
-    const any5 = Result.any(err0, err1, err2, ok2);
-    expect(any5).toMatchResult(Ok(8));
-    eq<typeof any5, Result<boolean | 8, [symbol, Error, 9, boolean]>>(true);
+    const any2Array = Result.any([err0, err1]);
+    expect(any2Array).toMatchResult(Err([err0.val, err1.val]));
+    eq<typeof any2Array, Result<never, [symbol, Error]>>(true);
+
+    const any3 = Result.any(...([] as Result<string, number>[]));
+    eq<typeof any3, Result<string, number[]>>(true);
+
+    const any3Array = Result.any([] as Result<string, number>[]);
+    eq<typeof any3Array, Result<string, number[]>>(true);
+
+    const any4 = Result.any(err0, err1, err2, ok2);
+    expect(any4).toMatchResult(Ok(8));
+    eq<typeof any4, Result<boolean | 8, [symbol, Error, 9, boolean]>>(true);
+
+    const any4Array = Result.any([err0, err1, err2, ok2]);
+    expect(any4Array).toMatchResult(Ok(8));
+    eq<typeof any4Array, Result<boolean | 8, [symbol, Error, 9, boolean]>>(true);
 });
 
 test('Result.wrap', () => {
